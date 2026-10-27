@@ -1,0 +1,28 @@
+
+name: DBP-IC Verilog Simulation
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Icarus Verilog
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog
+
+      - name: Compile testbench
+        run: |
+          iverilog -g2012 -o dbp_test \
+            rtl/dbp_id_register.v \
+            testbench/tb_dbp_id_register.v
+
+      - name: Run simulation
+        run: vvp dbp_test
